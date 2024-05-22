@@ -9,9 +9,6 @@ import {Track} from '../Track'
 //Component that renders the cards or the menu.
 export default function DisplayManager(){
 
-
-
-
     // The state containing the album elements.
     const [albums, setAlbums] = useState<Track[]>([]);
 
@@ -27,7 +24,7 @@ export default function DisplayManager(){
         {albums.length > 0 ? (
             <CardDisplay albums={albums} />
         ) : (
-            <Menu genres={['Pop', 'Kpop', 'Rock', 'Banda', 'Classical']} onGenreSelection={handleGenreSelection} />
+            <Menu genres={[' pop', ' Kpop', 'Rap', 'Rock', 'Reggaeton', ' R&B']} onGenreSelection={handleGenreSelection} />
         )}
     </div>
 );
