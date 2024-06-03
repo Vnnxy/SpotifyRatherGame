@@ -5,13 +5,12 @@ import SmallCardSelector from "./SmallCardSelector";
 function PlaylistConfig(){
 
     //The state that shows if the user wants to create a playlist or not.
-    const [isCreatePlaylist, setCreatePlaylist] = useState(false);
+    const [playlistChoice, setPlaylistChoice] = useState<'yes' | 'no' | null>(null);
     //State that shows if the user wants similar tracks.
     const [addRecommendedTracks, setRecommendedTracks] = useState(false);
     //The name of the playlist the user wants.
     const [playlistName, setPlaylistName] = useState('TestPlaylist');
 
-    const [playlistChoice, setPlaylistChoice] = useState<'yes' | 'no' | null>(null);
     
 
 
@@ -24,7 +23,7 @@ function PlaylistConfig(){
 
     const handleCreatePlaylist = async () => {
         try {
-            await createPlaylist({ PlaylistName: playlistName});
+            const playlistData = await createPlaylist({ PlaylistName: playlistName});
         } catch (error) {
             console.error('Error creating playlist:', error);
         }

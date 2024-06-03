@@ -24,10 +24,9 @@ export default async function createPlaylist ({PlaylistName}:{PlaylistName:strin
     };
 
     try{
-    console.log(userId)
     const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, reqBody);
     const responseData = await response.json();
-    return responseData;
+    return responseData.id;
 
     }catch(error){
         console.error('Error with playlist creation', error);

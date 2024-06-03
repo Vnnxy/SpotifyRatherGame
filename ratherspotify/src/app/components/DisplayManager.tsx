@@ -9,11 +9,22 @@ import PlaylistConfig from "./PlaylistConfig"
 //Component that renders the cards or the menu.
 export default function DisplayManager(){
 
-// The state containing the album elements.
+  // The state containing the album elements.
   const [albums, setAlbums] = useState<Track[]>([]);
+  // React state for the plaulist songs
+  const [playlistSongs, setPlaylistSongs] = useState<Track[]>([]);
 
-    //Event handler for the selection of the genre.
-    // Event handler for the selection of the genre.
+
+  // Updates the PlaylistSongs state to add the selected ones.
+  const saveSong = (track:Track) =>{
+    setPlaylistSongs([
+        ...playlistSongs, track])
+    console.log(playlistSongs)
+  };
+
+
+
+  //Event handler for the selection of the genre.
   const handleGenreSelection = async (genre: string) => {
   try {
     const response = await fetch(`/api/getAlbums?genre=${encodeURIComponent(genre)}`);
@@ -24,7 +35,6 @@ export default function DisplayManager(){
     setAlbums(fetchedAlbums);
   } catch (error) {
     console.error('Error fetching albums:', error);
-    // Handle errors, e.g., show an error message to the user
   } 
   };
 
@@ -34,7 +44,7 @@ return (
     <div className="w-full">
         <PlaylistConfig/>
         {albums.length > 0 ? (
-            <CardDisplay albums={albums} />
+            <CardDisplay albums={albums} saveSong={saveSong} />
         ) : (
             <Menu genres={[' pop', ' Kpop', 'Rap', 'Rock', 'Reggaeton', ' R&B']} onGenreSelection={handleGenreSelection} />
         )}

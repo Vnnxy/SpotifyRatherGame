@@ -3,8 +3,11 @@ import {Track} from './Track'
 
 /**
  * Card component where the album info will be displayed.
- * @param param0 
- * @returns 
+ * @param album The album title
+ * @param imageURL The spotify album/track image url
+ * @param artist The name of the artist
+ * @param position If the position of the card will be on the left or right side.
+ * @param onClick The event handler.
  */
 
  function Card({album, imageURL, artist, position, onClick}: cardProps){
@@ -24,43 +27,42 @@ import {Track} from './Track'
  
 }
 
-export default function CardDisplay(props:{albums:Track[]}){
+/**
+ * The component that displays the cards in place. It also handles the data the cards will display.
+ * @param props [albums] Track[], the array of Track that the cards will display.
+ * @returns 
+ */
+export default function CardDisplay({albums,saveSong}:{albums:Track[], saveSong:(track: Track) => void }){
 
     const [leftCardIndex, setLeftCardIndex] = useState(0);
     const [rightCardIndex, setRightCardIndex] = useState(1);
-    const [playlistSongs, setPlaylistSongs] = useState<PlaylistSong[]>([]);
 
  
     const fetchNewAlbum = () => {
         setLeftCardIndex((prevLeftIndex) => {
-            const newLeftIndex = (prevLeftIndex + 1) % props.albums.length;
-            return newLeftIndex === rightCardIndex ? (newLeftIndex + 1) % props.albums.length : newLeftIndex;
+            const newLeftIndex = (prevLeftIndex + 1) % albums.length;
+            return newLeftIndex === rightCardIndex ? (newLeftIndex + 1) % albums.length : newLeftIndex;
         });
     
         setRightCardIndex((prevRightIndex) => {
-            const newRightIndex = (prevRightIndex + 2) % props.albums.length;
-            return newRightIndex === leftCardIndex ? (newRightIndex + 1) % props.albums.length : newRightIndex;
+            const newRightIndex = (prevRightIndex + 2) % albums.length;
+            return newRightIndex === leftCardIndex ? (newRightIndex + 1) % albums.length : newRightIndex;
         });
 
         
     }
-
-    const saveSong = (trackId : string) =>{
-        setPlaylistSongs([
-            ...playlistSongs, {trackId}])};
-
-
-    const handleAlbumSelection = (trackId: string) =>{
+    
+    // Event handler when selecting one card.
+    const handleAlbumSelection = (track: Track) =>{
         fetchNewAlbum();
-        saveSong(trackId);
-        console.log(playlistSongs)
+        saveSong(track);
     }
     
 
     return(
         <div className="flex mt-12 w-full justify-center space-x-32">
-            <Card album={props.albums[leftCardIndex].name} imageURL={props.albums[leftCardIndex].imageURL} artist= {props.albums[leftCardIndex].artists[0]}position='left' onClick={()=>handleAlbumSelection(props.albums[rightCardIndex].id)}/>
-            <Card album={props.albums[rightCardIndex].name} imageURL={props.albums[rightCardIndex].imageURL} artist= {props.albums[rightCardIndex].artists[0]}position='right' onClick={()=>handleAlbumSelection(props.albums[rightCardIndex].id)}/>
+            <Card album={albums[leftCardIndex].name} imageURL={albums[leftCardIndex].imageURL} artist= {albums[leftCardIndex].artists[0]}position='left' onClick={()=>handleAlbumSelection(albums[rightCardIndex])}/>
+            <Card album={albums[rightCardIndex].name} imageURL={albums[rightCardIndex].imageURL} artist= {albums[rightCardIndex].artists[0]}position='right' onClick={()=>handleAlbumSelection(albums[rightCardIndex])}/>
         </div>
         
     )

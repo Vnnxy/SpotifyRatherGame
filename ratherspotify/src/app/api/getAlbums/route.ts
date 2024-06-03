@@ -23,6 +23,8 @@ export async function GET(req: NextRequest) {
         const response = await fetch(`https://api.spotify.com/v1/search?q=genre:${encodedGenre}&type=track&limit=44&market=US&offset=${getRandomSearch()}`, searchParams);
 
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Spotify API error:', errorText);
             throw new Error('Failed to fetch data from Spotify');
         }
 
@@ -37,6 +39,7 @@ export async function GET(req: NextRequest) {
 const cleanAlbumData = (albums: any[]): Track[] => {
     return albums.map(album => ({
         id: album.id,
+        uri: album.uri,
         name: album.name,
         imageURL: album.album.images[0].url,
         date: album.album.release_date,
