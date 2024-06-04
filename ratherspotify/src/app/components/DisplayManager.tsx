@@ -29,6 +29,8 @@ export default function DisplayManager(){
   try {
     const response = await fetch(`/api/getAlbums?genre=${encodeURIComponent(genre)}`);
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Spotify API error:', errorText);
       throw new Error('Failed to fetch albums');
     }
     const fetchedAlbums: Track[] = await response.json();

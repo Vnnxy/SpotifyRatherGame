@@ -7,7 +7,7 @@ import getAccessToken from "./spotifyApi"
  * @param recursionDepth Number of recursive calls to add recommended tracks.
  */
 async function addTracks({playlistId, tracks,recommendations, recursionDepth = 0} :{playlistId:string, tracks:string [], recommendations:boolean, recursionDepth?: number}){
-    const accessToken = getAccessToken();
+    const accessToken = await getAccessToken();
     const reqBody = {
         method: 'POST',
         headers: {
@@ -15,14 +15,15 @@ async function addTracks({playlistId, tracks,recommendations, recursionDepth = 0
             'Authorization': 'Bearer ' + accessToken
         },
         body: JSON.stringify({
-            uris: tracks,
-            position: 0
+            uris: tracks
         })
     };
 
     try{
         const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, reqBody);
+        console.log(response)
         await response.json();
+        
         if (recommendations && recursionDepth < 2) {  // Limiting the recursion depth to 3
             const recommendedTracks = await getRecommendedTracks(tracks);
             if (recommendedTracks.length > 0) {
@@ -43,7 +44,7 @@ async function addTracks({playlistId, tracks,recommendations, recursionDepth = 0
  * @returns {Promise<string[]>} A promise that resolves to a list of recommended track URI's.
  */
 async function getRecommendedTracks(tracks: string[]): Promise<string[]> {
-    const accessToken = getAccessToken();
+    const accessToken = await getAccessToken();
     const seedTracks = tracks.slice(0, 5);  // Spotify API allows up to 5 seed tracks
     const response = await fetch(`https://api.spotify.com/v1/recommendations?seed_tracks=${seedTracks.join(',')}&min_popularity=64`, {
         headers: {
@@ -52,9 +53,14 @@ async function getRecommendedTracks(tracks: string[]): Promise<string[]> {
     });
 
     if (!response.ok) {
+        const errorText = await response.text();
+            console.error('Spotify API error:', errorText);
         throw new Error('Failed to fetch recommended tracks');
     }
 
     const data = await response.json();
     return data.tracks.map((track: any) => track.uri);
 }
+
+
+export default addTracks;

@@ -10,10 +10,6 @@ const getAccessToken = async () => {
   const client_id = process.env.SPOTIFY_CLIENT_ID!;
   const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
 
-  const requestBody = new URLSearchParams();
-  requestBody.append("grant_type", "refresh_token");
-  requestBody.append("refresh_token", refresh_token);
-
   //Error handling when env vars are missing.
   if (!refresh_token || !client_id || !client_secret) {
     throw new Error('Missing Spotify environment variables');
@@ -27,7 +23,10 @@ const getAccessToken = async () => {
       ).toString("base64")}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: requestBody,
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token,
+    }),
   });
 
   const data = await response.json();
