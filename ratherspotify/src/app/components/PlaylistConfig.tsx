@@ -2,8 +2,9 @@ import { useState } from "react"
 import createPlaylist from "../pages/api/spotifyPlaylistCreator";
 import SmallCardSelector from "./SmallCardSelector";
 import addTracks from "../pages/api/spotifyAddTracks";
+import { Track } from "./Track";
 
-function PlaylistConfig(){
+function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
 
     //The state that shows if the user wants to create a playlist or not.
     const [playlistChoice, setPlaylistChoice] = useState<true | false | null>(null);
@@ -27,8 +28,7 @@ function PlaylistConfig(){
     const handleCreatePlaylist = async () => {
         try {
             const playlistId = await createPlaylist({ PlaylistName: playlistName});
-            const tracks = ['spotify:track:1iMEiJugm9sU6tm2lggefQ', 'spotify:track:1wnHJLmlQ6fUBgHnFSewBK', 'spotify:track:41wzRNsBeah1fyisepbAxN',"spotify:track:4Wa3kUtGTeuPuC9qF9wF0g","spotify:track:0YAHBaodj1YIoK0htcE6k6"]
-            await addTracks({playlistId, tracks, recommendations: addRecommendedTracks});
+            await addTracks({playlistId, tracks: selectedTracks, recommendations: addRecommendedTracks});
         } catch (error) {
             console.error('Error creating playlist:', error);
         }

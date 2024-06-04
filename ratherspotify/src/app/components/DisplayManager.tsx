@@ -11,7 +11,7 @@ export default function DisplayManager(){
 
   // The state containing the album elements.
   const [albums, setAlbums] = useState<Track[]>([]);
-  // React state for the plaulist songs
+  // React state for the playlist songs
   const [playlistSongs, setPlaylistSongs] = useState<Track[]>([]);
 
 
@@ -19,7 +19,6 @@ export default function DisplayManager(){
   const saveSong = (track:Track) =>{
     setPlaylistSongs([
         ...playlistSongs, track])
-    console.log(playlistSongs)
   };
 
 
@@ -44,7 +43,7 @@ export default function DisplayManager(){
     
 return (
     <div className="w-full">
-        <PlaylistConfig/>
+        <PlaylistConfig selectedTracks={playlistSongs}/>
         {albums.length > 0 ? (
             <CardDisplay albums={albums} saveSong={saveSong} />
         ) : (
