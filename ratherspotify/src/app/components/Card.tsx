@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {Track} from './Track'
 
 /**
@@ -32,30 +32,28 @@ import {Track} from './Track'
  * @param props [albums] Track[], the array of Track that the cards will display.
  * @returns 
  */
-export default function CardDisplay({albums,saveSong}:{albums:Track[], saveSong:(track: Track) => void }){
+export default function CardDisplay({albums,saveSong, onFinish}:{albums:Track[], saveSong:(track: Track) => void, onFinish: ()=> void }){
 
     const [leftCardIndex, setLeftCardIndex] = useState(0);
     const [rightCardIndex, setRightCardIndex] = useState(1);
-
- 
-    const fetchNewAlbum = () => {
-        setLeftCardIndex((prevLeftIndex) => {
-            const newLeftIndex = (prevLeftIndex + 1) % albums.length;
-            return newLeftIndex === rightCardIndex ? (newLeftIndex + 1) % albums.length : newLeftIndex;
-        });
-    
-        setRightCardIndex((prevRightIndex) => {
-            const newRightIndex = (prevRightIndex + 2) % albums.length;
-            return newRightIndex === leftCardIndex ? (newRightIndex + 1) % albums.length : newRightIndex;
-        });
-
+      
+    const fetchNewTracks = () => {
         
+        const newLeftIndex = leftCardIndex + 2;
+        const newRightIndex = rightCardIndex + 2;
+
+        if(newLeftIndex >= albums.length || newRightIndex >= albums.length){
+            onFinish();
+            return;
+        }
+        setLeftCardIndex(newLeftIndex);
+        setRightCardIndex(newRightIndex);
     }
     
     // Event handler when selecting one card.
     const handleAlbumSelection = (track: Track) =>{
-        fetchNewAlbum();
         saveSong(track);
+        fetchNewTracks();
     }
     
 
@@ -83,8 +81,3 @@ interface cardProps {
     //The click function
     onClick : ()=>void;
 }
-
-// Define the type for a playlist song
-interface PlaylistSong {
-    trackId: string;
-  }

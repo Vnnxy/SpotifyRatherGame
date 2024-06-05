@@ -5,6 +5,7 @@ import Menu from "./Menu"
 import { useState } from "react"
 import {Track} from './Track'
 import PlaylistConfig from "./PlaylistConfig"
+import { useRouter } from "next/navigation"
 
 //Component that renders the cards or the menu.
 export default function DisplayManager(){
@@ -14,11 +15,17 @@ export default function DisplayManager(){
   // React state for the playlist songs
   const [playlistSongs, setPlaylistSongs] = useState<Track[]>([]);
 
+  const router = useRouter();
+
 
   // Updates the PlaylistSongs state to add the selected ones.
   const saveSong = (track:Track) =>{
     setPlaylistSongs([
         ...playlistSongs, track])
+  };
+
+  const handleCardDisplayCompletion = () => {
+    router.push(`/playlistConfiguration?playlistSongs=${encodeURIComponent(JSON.stringify(playlistSongs))}`);
   };
 
 
@@ -43,9 +50,8 @@ export default function DisplayManager(){
     
 return (
     <div className="w-full">
-        <PlaylistConfig selectedTracks={playlistSongs}/>
         {albums.length > 0 ? (
-            <CardDisplay albums={albums} saveSong={saveSong} />
+            <CardDisplay albums={albums} saveSong={saveSong} onFinish={handleCardDisplayCompletion} />
         ) : (
             <Menu genres={[' pop', ' Kpop', 'Rap', 'Rock', 'Reggaeton', ' R&B']} onGenreSelection={handleGenreSelection} />
         )}

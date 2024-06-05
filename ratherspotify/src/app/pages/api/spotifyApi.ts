@@ -50,7 +50,6 @@ interface FetchOptions extends RequestInit {
 
 const fetchWithToken = async (url: string, options: FetchOptions = {}): Promise<Response> => {
   let accessToken = await getAccessToken();
-  console.log('Initial access token retrieved:', accessToken);
 
   const makeRequest = async (token: string): Promise<Response> => {
     const response = await fetch(url, {
@@ -62,9 +61,7 @@ const fetchWithToken = async (url: string, options: FetchOptions = {}): Promise<
     });
 
     if (response.status === 401) {
-      console.warn('Access token expired, retrying with new token');
       accessToken = await getAccessToken();
-      console.log('New access token retrieved:', accessToken);
 
       // Retry the request with the new token
       return await fetch(url, {

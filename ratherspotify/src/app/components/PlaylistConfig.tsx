@@ -3,6 +3,7 @@ import createPlaylist from "../pages/api/spotifyPlaylistCreator";
 import SmallCardSelector from "./SmallCardSelector";
 import addTracks from "../pages/api/spotifyAddTracks";
 import { Track } from "./Track";
+import { useRouter } from "next/navigation";
 
 function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
 
@@ -13,6 +14,8 @@ function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
     //The name of the playlist the user wants.
     const [playlistName, setPlaylistName] = useState('');
 
+    const router = useRouter();
+
     const handleRecommendation = (userChoice: true | false) => {
         setRecommendedTracks(userChoice);
     };
@@ -21,7 +24,7 @@ function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
     const handlePlaylistChoice = (userChoice: true | false) => {
         setPlaylistChoice(userChoice);
         if (userChoice === false) {
-            //Return to main menu
+            router.push('/')
         }
     };
 
