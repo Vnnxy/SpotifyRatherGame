@@ -14,7 +14,7 @@ const getAccessToken = async () => {
   if (!refresh_token || !client_id || !client_secret) {
     throw new Error('Missing Spotify environment variables');
   }
-
+  try{
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
@@ -27,12 +27,72 @@ const getAccessToken = async () => {
       grant_type: "refresh_token",
       refresh_token,
     }),
+    cache: 'no-cache'
   });
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Failed to refresh access token:', errorText);
+    throw new Error(`Failed to refresh access token: ${response.statusText}`);
+  }
 
-  const data = await response.json();
-  return data.access_token;
+  const data: { access_token: string } = await response.json();
+    return data.access_token;
+}catch(error){
+  console.error('Error in getting the Access Token', error);
+  throw error;
+}
 };
 
-export default getAccessToken;
 
-  
+interface FetchOptions extends RequestInit {
+  headers?: Record<string, string>;
+}
+
+const fetchWithToken = async (url: string, options: FetchOptions = {}): Promise<Response> => {
+  let accessToken = await getAccessToken();
+  console.log('Initial access token retrieved:', accessToken);
+
+  const makeRequest = async (token: string): Promise<Response> => {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 401) {
+      console.warn('Access token expired, retrying with new token');
+      accessToken = await getAccessToken();
+      console.log('New access token retrieved:', accessToken);
+
+      // Retry the request with the new token
+      return await fetch(url, {
+        ...options,
+        headers: {
+          ...options.headers,
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+    }
+
+    return response;
+  };
+
+  let response: Response;
+  try {
+    response = await makeRequest(accessToken);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Spotify API request failed:', errorText);
+      throw new Error(`Spotify API request failed: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error in fetchWithToken:', error);
+    throw error;
+  }
+
+  return response;
+};
+
+export default fetchWithToken;

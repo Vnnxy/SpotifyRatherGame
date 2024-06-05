@@ -1,5 +1,5 @@
 import { Track } from "@/app/components/Track";
-import getAccessToken from "./spotifyApi"
+import fetchWithToken from "./spotifyApi"
 /**
  * Adds tracks to the given spotify playlist.
  * @param playlistId The spotify ID for the playlist we want to modify.
@@ -8,13 +8,12 @@ import getAccessToken from "./spotifyApi"
  * @param recursionDepth Number of recursive calls to add recommended tracks.
  */
 async function addTracks({playlistId, tracks,recommendations, recursionDepth = 0} :{playlistId:string, tracks:Track[], recommendations:boolean, recursionDepth?: number}){
-    const accessToken = await getAccessToken();
+
     const trackUris = tracks.map(track => track.uri);
     const reqBody = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken
         },
         body: JSON.stringify({
             uris: trackUris
@@ -22,8 +21,7 @@ async function addTracks({playlistId, tracks,recommendations, recursionDepth = 0
     };
 
     try{
-        const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, reqBody);
-        console.log(response)
+        const response = await fetchWithToken(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, reqBody);
         await response.json();
         
         if (recommendations && recursionDepth < 1) {  // Limiting the recursion depth to 1
@@ -47,16 +45,14 @@ async function addTracks({playlistId, tracks,recommendations, recursionDepth = 0
  * @returns {Promise<string[]>} A promise that resolves to a list of recommended track URI's.
  */
 async function getRecommendedTracks(tracks: string[]): Promise<Track[]> {
-    const accessToken = await getAccessToken();
     const seedTracks = tracks.slice(0, 5);  // Spotify API allows up to 5 seed tracks
     const reqBody = {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken
         }
     };
-    const response = await fetch(`https://api.spotify.com/v1/recommendations?seed_tracks=${seedTracks.join(',')}&min_popularity=64`,reqBody);
+    const response = await fetchWithToken(`https://api.spotify.com/v1/recommendations?seed_tracks=${seedTracks.join(',')}&min_popularity=64`,reqBody);
 
     if (!response.ok) {
         const errorText = await response.text();

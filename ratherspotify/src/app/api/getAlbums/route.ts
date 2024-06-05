@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import getAccessToken from '@/app/pages/api/spotifyApi';
 import { Track } from '@/app/components/Track';
+import fetchWithToken from '@/app/pages/api/spotifyApi';
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -11,16 +11,14 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const accessToken = await getAccessToken();
         const searchParams = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken
             }
         };
         const encodedGenre = encodeURIComponent(genre);
-        const response = await fetch(`https://api.spotify.com/v1/search?q=genre:${encodedGenre}&type=track&limit=44&market=US&offset=${getRandomSearch()}`, searchParams);
+        const response = await fetchWithToken(`https://api.spotify.com/v1/search?q=genre:${encodedGenre}&type=track&limit=44&market=US&offset=${getRandomSearch()}`, searchParams);
 
         if (!response.ok) {
             const errorText = await response.text();
