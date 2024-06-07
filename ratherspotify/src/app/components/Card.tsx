@@ -19,8 +19,8 @@ import {Track} from './Track'
             <img src = {imageURL} alt='playlist image' className='absolute inset-0 w-3/4 h-auto m-auto object-cover rounded-t-xl'/>
             </div>
             <div className="text-center">
-                <p className="font-mono text-xl md:text-2xl lg:text-3xl xl:text-4xl">{album}</p>
-                <p className="font-mono text-base md:text-lg lg:text-xl xl:text-2xl mt-2">{artist}</p>
+                <p className=" Damfont-mono  font-bold text-xl md:text-2xl lg:text-3xl xl:text-4xl">{album}</p>
+                <p className="Damfont-mono  font-bold text-base md:text-lg lg:text-xl xl:text-2xl mt-2">{artist}</p>
             </div>
         </div>
     )

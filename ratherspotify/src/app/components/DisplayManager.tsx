@@ -53,7 +53,7 @@ return (
         {albums.length > 0 ? (
             <CardDisplay albums={albums} saveSong={saveSong} onFinish={handleCardDisplayCompletion} />
         ) : (
-            <Menu genres={[' pop', ' Kpop', 'Rap', 'Rock', 'Reggaeton', ' R&B']} onGenreSelection={handleGenreSelection} />
+            <Menu genres={[' pop', ' Kpop', 'Rap', 'Rock', 'Reggaeton', ' R&B', 'j-pop','j-rock', 'Classical', 'jazz', 'acoustic', 'country']} onGenreSelection={handleGenreSelection} />
         )}
     </div>
 );
