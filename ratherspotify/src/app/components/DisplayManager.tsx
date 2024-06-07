@@ -4,7 +4,7 @@ import CardDisplay from "./Card"
 import Menu from "./Menu"
 import { useState } from "react"
 import {Track} from './Track'
-import PlaylistConfig from "./PlaylistConfig"
+import { useTracks } from "@/context/TracksContent"
 import { useRouter } from "next/navigation"
 
 //Component that renders the cards or the menu.
@@ -13,7 +13,7 @@ export default function DisplayManager(){
   // The state containing the album elements.
   const [albums, setAlbums] = useState<Track[]>([]);
   // React state for the playlist songs
-  const [playlistSongs, setPlaylistSongs] = useState<Track[]>([]);
+  const { playlistSongs, setPlaylistSongs } = useTracks();
 
   const router = useRouter();
 
@@ -25,7 +25,7 @@ export default function DisplayManager(){
   };
 
   const handleCardDisplayCompletion = () => {
-    router.push(`/playlistConfiguration?playlistSongs=${encodeURIComponent(JSON.stringify(playlistSongs))}`);
+    router.push(`/playlistConfiguration`);
   };
 
 

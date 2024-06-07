@@ -1,3 +1,4 @@
+'use server'
 import { Track } from "@/app/components/Track";
 import fetchWithToken from "./spotifyApi"
 /**
@@ -8,7 +9,6 @@ import fetchWithToken from "./spotifyApi"
  * @param recursionDepth Number of recursive calls to add recommended tracks.
  */
 async function addTracks({playlistId, tracks,recommendations, recursionDepth = 0} :{playlistId:string, tracks:Track[], recommendations:boolean, recursionDepth?: number}){
-
     const trackUris = tracks.map(track => track.uri);
     const reqBody = {
         method: 'POST',
@@ -22,16 +22,20 @@ async function addTracks({playlistId, tracks,recommendations, recursionDepth = 0
 
     try{
         const response = await fetchWithToken(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, reqBody);
+        if (!response.ok) {
+            console.error("Failed to add tracks to playlist", await response.text());
+            return;
+          }
         await response.json();
+        console.log('Tracks added successfully');
         
-        if (recommendations && recursionDepth < 1) {  // Limiting the recursion depth to 1
+        if (recommendations && recursionDepth < 2) {  // Limiting the recursion depth to 1
             const trackIds = tracks.map(track => track.id)
             const recommendedTracks = await getRecommendedTracks(trackIds);
             if (recommendedTracks.length > 0) {
                 await addTracks({ playlistId, tracks: recommendedTracks, recommendations:false, recursionDepth: recursionDepth + 1 });
             }
         }
-
         }catch(error){
             console.error('Error while trying to add tracks to playlist', error);
             throw error;
@@ -65,9 +69,9 @@ async function getRecommendedTracks(tracks: string[]): Promise<Track[]> {
         id: track.id,
         uri: track.uri,
         name: track.name,
-        imageURL: track.album.images[0].url, // Assuming there is at least one image
-        date: track.album.release_date, // Assuming release_date is available
-        artists: track.artists.map((artist: any) => artist.name) // Assuming artists are available
+        imageURL: track.album.images[0].url, 
+        date: track.album.release_date,
+        artists: track.artists.map((artist: any) => artist.name)
     }));
 
     return recommendedTracks;

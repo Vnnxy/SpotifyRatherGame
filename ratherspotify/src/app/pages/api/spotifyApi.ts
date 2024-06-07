@@ -45,7 +45,9 @@ const getAccessToken = async () => {
 
 
 interface FetchOptions extends RequestInit {
+  method?: string;
   headers?: Record<string, string>;
+  body?: string;
 }
 
 const fetchWithToken = async (url: string, options: FetchOptions = {}): Promise<Response> => {

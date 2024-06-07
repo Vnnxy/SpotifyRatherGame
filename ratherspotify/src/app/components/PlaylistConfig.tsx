@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react"
 import createPlaylist from "../pages/api/spotifyPlaylistCreator";
 import SmallCardSelector from "./SmallCardSelector";
@@ -5,14 +6,15 @@ import addTracks from "../pages/api/spotifyAddTracks";
 import { Track } from "./Track";
 import { useRouter } from "next/navigation";
 
-function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
 
+function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
     //The state that shows if the user wants to create a playlist or not.
     const [playlistChoice, setPlaylistChoice] = useState<true | false | null>(null);
     //State that shows if the user wants similar tracks.
     const [addRecommendedTracks, setRecommendedTracks] = useState<boolean>(false);
     //The name of the playlist the user wants.
     const [playlistName, setPlaylistName] = useState('');
+
 
     const router = useRouter();
 
@@ -28,10 +30,11 @@ function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
         }
     };
 
+
     const handleCreatePlaylist = async () => {
-        try {
+        try { 
             const playlistId = await createPlaylist({ PlaylistName: playlistName});
-            await addTracks({playlistId, tracks: selectedTracks, recommendations: addRecommendedTracks});
+            await addTracks({playlistId, tracks: (selectedTracks), recommendations: addRecommendedTracks});
         } catch (error) {
             console.error('Error creating playlist:', error);
         }
