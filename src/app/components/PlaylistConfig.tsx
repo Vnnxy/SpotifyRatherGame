@@ -7,7 +7,10 @@ import { Track } from "./Track";
 import { useRouter } from "next/navigation";
 import { useTracks } from "@/context/TracksContent"
 
-
+/**
+ * Displays the configuration of the playlist and calls for the methods.
+ * @param selectedTracks An array of Tracks[] that contains the tracks selected by the user. 
+ */
 function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
     //The state that shows if the user wants to create a playlist or not.
     const [playlistChoice, setPlaylistChoice] = useState<true | false | null>(null);
@@ -20,11 +23,19 @@ function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
 
     const router = useRouter();
 
+    /**
+     * Handles if the user wants to add recommendations.
+     * @param userChoice Boolean indicates the user's choice
+     */
     const handleRecommendation = (userChoice: true | false) => {
         setRecommendedTracks(userChoice);
     };
     
 
+    /**
+     * Logic behind showing the user the configuration page or going to the main page.
+     * @param userChoice boolean User's choice
+     */
     const handlePlaylistChoice = (userChoice: true | false) => {
         setPlaylistChoice(userChoice);
         if (userChoice === false) {
@@ -34,6 +45,9 @@ function PlaylistConfig( {selectedTracks}: {selectedTracks : Track[]}){
     };
 
 
+    /**
+     * Creates the playlist by calling the api endpoints.
+     */
     const handleCreatePlaylist = async () => {
         try { 
             const playlistId = await createPlaylist({ PlaylistName: playlistName});

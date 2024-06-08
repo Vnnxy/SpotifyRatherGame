@@ -24,6 +24,7 @@ export default function DisplayManager(){
         ...playlistSongs, track])
   };
 
+  // Handles the end of the game by starting the /playlistConfiguration page.
   const handleCardDisplayCompletion = () => {
     router.push(`/playlistConfiguration`);
   };

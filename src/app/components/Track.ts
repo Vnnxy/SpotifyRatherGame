@@ -1,4 +1,4 @@
-// Album type to define the structure of the album data
+// Track type to define the structure of the Tracks data
 export interface Track {
     id: string;
     uri: string,

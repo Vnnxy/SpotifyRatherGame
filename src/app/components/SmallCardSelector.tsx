@@ -1,7 +1,15 @@
+/**
+ * Interface for the SmallCardSelector props
+ */
 interface SmallCardSelectorProps {
     onClick: (value: boolean) => void;
 }
 
+/**
+ * A small version of the cards component, used for choosing between two options.
+ * @param onClick The method that will be called when a card is clicked.  
+ * @returns void.
+ */
 const SmallCardSelector: React.FC<SmallCardSelectorProps> = ({ onClick }) => {
 
     return (

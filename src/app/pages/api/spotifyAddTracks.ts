@@ -26,9 +26,7 @@ async function addTracks({playlistId, tracks,recommendations, recursionDepth = 0
             console.error("Failed to add tracks to playlist", await response.text());
             return;
           }
-        await response.json();
-        console.log('Tracks added successfully');
-        
+        await response.json();        
         if (recommendations && recursionDepth < 2) {  // Limiting the recursion depth to 1
             const trackIds = tracks.map(track => track.id)
             const recommendedTracks = await getRecommendedTracks(trackIds);

@@ -1,6 +1,11 @@
 'use client'
 
-//The Menu component that renders the dynamic components.
+/**
+ * Menu component that displays the genres.
+ * @param genres The genres the user will be able to choose from.
+ * @param onGenreSelection Handler for the selection of a genre.
+ * @returns void 
+ */
 export default function Menu({ genres, onGenreSelection } : {genres : string[]; onGenreSelection:(genre:string) => void}){
     
 // The starters setting where we choose a genre.

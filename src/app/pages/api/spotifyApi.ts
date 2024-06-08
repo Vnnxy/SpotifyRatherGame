@@ -43,16 +43,27 @@ const getAccessToken = async () => {
 }
 };
 
-
+// INterface for the fetching options
 interface FetchOptions extends RequestInit {
   method?: string;
   headers?: Record<string, string>;
   body?: string;
 }
 
+/**
+ * Integrates the fetch method and the getAccessToken in one.
+ * @param url The url we will be requesting/posting the data.
+ * @param options The additional options for the data.
+ * @returns  Promise<Response>
+ */
 const fetchWithToken = async (url: string, options: FetchOptions = {}): Promise<Response> => {
   let accessToken = await getAccessToken();
 
+  /**
+   * Makes the request to the given url
+   * @param token The access Token
+   * @returns Response.
+   */
   const makeRequest = async (token: string): Promise<Response> => {
     const response = await fetch(url, {
       ...options,
