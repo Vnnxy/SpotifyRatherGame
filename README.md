@@ -3,6 +3,10 @@
 This unique "Would You Rather" game incorporates the Spotify API to fetch tracks and display information about them. It allows you to create a Spotify playlist with your chosen songs and add recommendations based on your selections.
 
 ## Some footage
+![selection](https://github.com/Vnnxy/SpotifyRatherGame/assets/118841701/ba9525a6-fd2b-47a6-9c82-7f6127a6c4fc)
+![config](https://github.com/Vnnxy/SpotifyRatherGame/assets/118841701/8b735aa6-41dc-4483-b25b-792e20a19c9f)
+<img width="1635" alt="playlistImage" src="https://github.com/Vnnxy/SpotifyRatherGame/assets/118841701/f4981b42-f981-4c63-9ad6-d0edee417fbc">
+
 
 ## Technologies used
 
